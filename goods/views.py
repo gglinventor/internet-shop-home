@@ -29,7 +29,7 @@ def catalog(request, category_slug=None):
     current_page = paginator.page(int(page)) #текущая страница    
 
     context = {
-        "title": "Home Каталог",
+        "title": "Home - Каталог",
         "goods": current_page,
         "category_slug": category_slug,
     }
@@ -40,7 +40,7 @@ def product(request, product_slug):
     product = Products.objects.get(slug=product_slug)
 
     context = {
-        "title": f"Home {product.name}",
+        "title": f"Home - {product.name}",
         "product": product,
     }
 
