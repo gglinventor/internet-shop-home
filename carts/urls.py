@@ -14,22 +14,13 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import include, path
-from django.conf.urls.static import static
+from django.urls import path
+from carts import views
 
-from debug_toolbar.toolbar import debug_toolbar_urls
-
-from app import settings
+app_name = 'carts'
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('main.urls', namespace='main')),
-    path('catalog/', include('goods.urls', namespace='catalog')),
-    path('user/', include('users.urls', namespace='user')),
-    path('cart/', include('carts.urls', namespace='cart')),
+    path('cart_add/<int:product_id>', views.cart_add, name='cart_add'),
+    path('cart_change/<int:product_id>', views.cart_change, name='cart_change'),
+    path('cart_remove/<int:product_id>', views.cart_remove, name='cart_remove'),
 ]
-
-if settings.DEBUG:
-    urlpatterns += debug_toolbar_urls()
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
