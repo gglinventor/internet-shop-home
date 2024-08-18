@@ -77,4 +77,7 @@ def logout(request):
     return redirect(reverse('main:index'))
 
 def users_cart(request):
-    return render(request, 'users/users_cart.html')
+    context = {
+        'title': 'Home - Корзина'
+    }
+    return render(request, 'users/users_cart.html', context)
