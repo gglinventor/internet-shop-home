@@ -33,3 +33,10 @@ urlpatterns = [
 if settings.DEBUG:
     urlpatterns += debug_toolbar_urls()
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    
+
+admin.site.site_header = 'Панель администратора'
+
+admin.site.site_title = 'Админка'
+
+admin.site.index_title = 'Добро пожаловать в интерфейс администратора!'
