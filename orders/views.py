@@ -32,7 +32,7 @@ def create_order(request):
                             quantity = cart_item.quantity
                             
                             if product.quantity < quantity:
-                                raise ValidationError(f'Недостаточное количество товара {name} на складе\nВ наличии - {product.quantity}')
+                                raise ValidationError(f'Недостаточное количество товара {name} на складе. В наличии - {product.quantity}')
                             
                             OrderItem.objects.create(
                                 order=order,
