@@ -53,16 +53,17 @@ def cart_change(request):
     
     cart.quantity = quantity
     cart.save()
-    
-    order = None
-    referer = request.META.get('HTTP_REFERER')
-    if reverse('orders:create_order') in referer:
-        order = True
 
     user_cart = get_user_carts(request)
+    
+    context = {"carts": user_cart}
+    
+    referer = request.META.get('HTTP_REFERER')
+    if reverse('orders:create_order') in referer:
+        context["order"] = True
 
     cart_items_html = render_to_string(
-        "carts/includes/included_cart.html", {"carts": user_cart, "order": order}, request=request) #новая прорисовка корзины
+        "carts/includes/included_cart.html", context, request=request) #новая прорисовка корзины
 
     response_data = {
         "message": 'Количество изменено',
@@ -79,15 +80,16 @@ def cart_remove(request):
     quantity = cart.quantity
     cart.delete()
     
-    order = None
-    referer = request.META.get('HTTP_REFERER')
-    if reverse('orders:create_order') in referer:
-        order = True
-    
     user_cart = get_user_carts(request)
     
+    context = {"carts": user_cart}
+    
+    referer = request.META.get('HTTP_REFERER')
+    if reverse('orders:create_order') in referer:
+        context["order"] = True
+    
     cart_items_html = render_to_string(
-        "carts/includes/included_cart.html", {"carts": user_cart, "order": order}, request=request) #новая прорисовка корзины
+        "carts/includes/included_cart.html", context, request=request) #новая прорисовка корзины
 
     response_data = {
         "message": 'Товар удалён',
