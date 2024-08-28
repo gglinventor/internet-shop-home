@@ -1,43 +1,83 @@
-from django.http import HttpResponse
-from django.shortcuts import render
-
-from goods.models import Categories
+from django.views.generic import TemplateView
 
 
-def index(request):
-    context = {
-        'title': 'Home - Главная',
-        'content': 'Магазин мебели HOME',
-    }
+class IndexView(TemplateView):
+    template_name = 'main/index.html'
     
-    return render(request, 'main/index.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Home - Главная'
+        context['content'] = 'Магазин мебели HOME'
+        return context
+        
 
-
-def about(request):
-    context = {
-        'title': 'Home - О нас',
-        'content': 'О нас',
-        'text_on_page': 'Лучший магазин мебели в городе! У нас самый качественный товар!'
-    }
+# def index(request):
+    # context = {
+    #     'title': 'Home - Главная',
+    #     'content': 'Магазин мебели HOME',
+    # }
     
-    return render(request, 'main/about.html', context)
+    # return render(request, 'main/index.html', context)
 
 
-def shipping_and_payment(request):
-    context = {
-        'title': 'Home - О нас',
-        'content': 'Доставка и оплата',
-        'text_on_page': 'Довезём быстро, платить наличкой 😀'
-    }
+
+class AboutView(TemplateView):
+    template_name = 'main/about.html'
     
-    return render(request, 'main/about.html', context)
-
-
-def contact(request):
-    context = {
-        'title': 'Home - О нас',
-        'content': 'Контактная информация',
-        'text_on_page': 'Звонить, если есть вопросы, по номеру: 8-800-555-35-35'
-    }
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Home - Информация'
+        context['content'] = 'О нас'
+        context['text_on_page'] = 'Лучший магазин мебели в городе! У нас самый качественный товар!'
+        return context
     
-    return render(request, 'main/about.html', context)
+# def about(request):
+#     context = {
+#         'title': 'Home - О нас',
+#         'content': 'О нас',
+#         'text_on_page': 'Лучший магазин мебели в городе! У нас самый качественный товар!'
+#     }
+    
+#     return render(request, 'main/about.html', context)
+
+
+class ShippingAndPaymentView(TemplateView):
+    template_name = 'main/about.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Home - Информация'
+        context['content'] = 'Доставка и оплата'
+        context['text_on_page'] = 'Довезём быстро, платить наличкой 😀'
+        return context
+
+
+# def shipping_and_payment(request):
+#     context = {
+#         'title': 'Home - О нас',
+#         'content': 'Доставка и оплата',
+#         'text_on_page': 'Довезём быстро, платить наличкой 😀'
+#     }
+    
+#     return render(request, 'main/about.html', context)
+
+
+class ContactView(TemplateView):
+    template_name = 'main/about.html'
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Home - Информация'
+        context['content'] = 'Контактная информация'
+        context['text_on_page'] = 'Звонить, если есть вопросы, по номеру: 8-800-555-35-35'
+        return context
+
+
+# def contact(request):
+#     context = {
+#         'title': 'Home - О нас',
+#         'content': 'Контактная информация',
+#         'text_on_page': 'Звонить, если есть вопросы, по номеру: 8-800-555-35-35'
+#     }
+    
+#     return render(request, 'main/about.html', context)

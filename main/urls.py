@@ -20,8 +20,8 @@ from main import views
 app_name = 'main'
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('ship_and_pay/', views.shipping_and_payment, name='ship_and_pay'),
-    path('contact/', views.contact, name='contact'),
-    path('about/', views.about, name='about'),
+    path('', views.IndexView.as_view(), name='index'),
+    path('ship_and_pay/', views.ShippingAndPaymentView.as_view(), name='ship_and_pay'),
+    path('contact/', views.ContactView.as_view(), name='contact'),
+    path('about/', views.AboutView.as_view(), name='about'),
 ]
