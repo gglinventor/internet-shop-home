@@ -3,6 +3,7 @@ from django.db import transaction
 from django.forms import ValidationError
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 from carts.models import Cart
 from orders.models import Order, OrderItem
@@ -50,15 +51,27 @@ def create_order(request):
                         cart_items.delete()
                                 
                         messages.success(request, 'Заказ оформлен!')
-                        return redirect('user:profile')
+                        return redirect(reverse('user:profile'))
                     
             except ValidationError as e:
-                messages.success(request, str(e.message))
-                return render(request, 'orders/create_order.html')
+                messages.warning(request, str(e.message))
+                initial = {
+                    'first_name': request.user.first_name,
+                    'last_name': request.user.last_name,
+                    'phone_number': form.cleaned_data['phone_number'],
+                    }
+        
+                form = CreateOrderForm(initial=initial)
+                context = {
+                    'form': form,
+                    'order': True,
+                }
+                
+                return render(request, 'orders/create_order.html', context)
     else:
         initial = {
             'first_name': request.user.first_name,
-            'last_name': request.user.last_name,
+            'last_name': request.user.last_name, 
         }
         
         form = CreateOrderForm(initial=initial)
