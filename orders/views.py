@@ -70,6 +70,7 @@ class CreateOrderView(LoginRequiredMixin, FormView):
                 }
             form = CreateOrderForm(initial=initial)
             context = {
+                'title': 'Оформление заказа',
                 'form': form,
                 'order': True,
                 }
@@ -79,6 +80,7 @@ class CreateOrderView(LoginRequiredMixin, FormView):
     def form_invalid(self, form):
         messages.warning(self.request, 'Произошла ошибка')
         context = {
+            'title': 'Оформление заказа',
             'form': form,
             'order': True,
             }
