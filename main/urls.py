@@ -17,10 +17,13 @@ Including another URLconf
 from django.urls import path
 from main import views
 
+#from django.views.decorators.cache import cache_page
+
 app_name = 'main'
 
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
+    # path('', cache_page(60)(views.IndexView.as_view()), name='index'), - пример кэширования целой страницы
     path('ship_and_pay/', views.ShippingAndPaymentView.as_view(), name='ship_and_pay'),
     path('contact/', views.ContactView.as_view(), name='contact'),
     path('about/', views.AboutView.as_view(), name='about'),

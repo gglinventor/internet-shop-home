@@ -2,6 +2,7 @@ from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.cache import cache
 from django.db.models import Prefetch
 from django.shortcuts import redirect, render
 from django.http import HttpResponseRedirect
@@ -10,6 +11,7 @@ from django.views.generic import CreateView, TemplateView, UpdateView
 
 from carts.models import Cart
 from orders.models import Order, OrderItem
+from common.mixins import CacheMixin
 from users.forms import UserLoginForm, UserRegistrationForm, ProfileForm
 
 
@@ -76,7 +78,7 @@ class UserRegistrationView(CreateView): #"CreateView" - для любой инф
         return context
 
 
-class UserProfileView(LoginRequiredMixin, UpdateView): #"LoginRequiredMixin", как и все Mixin-ы, надо указывать первыми
+class UserProfileView(LoginRequiredMixin, CacheMixin, UpdateView): #"LoginRequiredMixin", как и все Mixin-ы, надо указывать первыми
     template_name = 'users/profile.html'
     form_class = ProfileForm
     success_url = reverse_lazy('user:profile')
@@ -97,15 +99,30 @@ class UserProfileView(LoginRequiredMixin, UpdateView): #"LoginRequiredMixin", к
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = 'Home - Кабинет'
-        orders = Order.objects.filter(user=self.request.user).prefetch_related(Prefetch('orderitem_set', queryset=OrderItem.objects.select_related('product'),)).order_by('-id')
-        context['orders'] = orders
-        all_price = {}
-        for order in orders:
-            order_price = 0
-            for item in order.orderitem_set.all():
-                order_price += item.price * item.quantity
-                all_price[order.id] = order_price
-        context['all_price'] = all_price
+        
+        orders = Order.objects.filter(user=self.request.user).prefetch_related(Prefetch('orderitem_set', queryset=OrderItem.objects.select_related('product'),)).order_by('-id') #запрос не делается, так как Django делает запрос только тогда, когда это становится восстребовано(например: при присвоении значения переменной в контекстную переменную для html-шаблона)
+        
+        data = self.set_get_cache(orders, f'orders_for_user_{self.request.user.id}', 60)
+        context['orders'] = data[0]
+        context['all_price'] = data[1]
+        
+        # cache_orders = cache.get(f'orders_for_user_{self.request.user.id}')
+        # if cache_orders:
+        #     context['orders'] = cache_orders[0]
+        #     context['all_price'] = cache_orders[1]
+        # else:
+        #     orders = Order.objects.filter(user=self.request.user).prefetch_related(Prefetch('orderitem_set', queryset=OrderItem.objects.select_related('product'),)).order_by('-id')
+        #     all_price = {}
+        #     for order in orders:
+        #         order_price = 0
+        #         for item in order.orderitem_set.all():
+        #             order_price += item.price * item.quantity
+        #             all_price[order.id] = order_price
+            
+        #     cache.set(f'orders_for_user_{self.request.user.id}', [orders, all_price], 60)
+        #     context['orders'] = orders
+        #     context['all_price'] = all_price
+        
         return context
 
 
